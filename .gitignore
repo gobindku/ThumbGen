@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+*.log
+.DS_Store
+.env.local
+.env.*.local
+public/uploads/*
+!public/uploads/.gitkeep
+data/
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -9,14 +9,18 @@ import FrameSelector from '@/components/FrameSelector';
 import ThumbnailGrid from '@/components/ThumbnailGrid';
 import ThumbnailEditor from '@/components/ThumbnailEditor';
 import { renderThumbnailToCanvas } from '@/lib/imageUtils';
+import AuthModal from '@/components/AuthModal';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Home() {
+  const { user, signOut } = useAuth();
   const [sessionId, setSessionId] = useState(null);
   const [variations, setVariations] = useState([]);
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [extractedFrames, setExtractedFrames] = useState(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const canvasRef = useRef(null);
 
   // Render canvas when variation changes
@@ -173,14 +177,28 @@ export default function Home() {
               Make youtube easy with thumbgen
             </h1>
           </div>
-          {sessionId && (
-            <button
-              onClick={handleNewSession}
-              className="btn btn-secondary"
-            >
-              New Session
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {sessionId && (
+              <button
+                onClick={handleNewSession}
+                className="btn btn-secondary"
+              >
+                New Session
+              </button>
+            )}
+            {user ? (
+              <button onClick={signOut} className="btn btn-secondary">
+                Sign Out
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="btn btn-primary"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -340,6 +358,11 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
 }

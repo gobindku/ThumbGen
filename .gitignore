@@ -5,6 +5,7 @@ out/
 .DS_Store
 .env.local
 .env.*.local
+.env
 public/uploads/*
 !public/uploads/.gitkeep
 data/

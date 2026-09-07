@@ -21,7 +21,10 @@ export default function Home() {
   const [generatingVariations, setGeneratingVariations] = useState(false);
   const [extractedFrames, setExtractedFrames] = useState(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const canvasRef = useRef(null);
+
+  const username = user?.user_metadata?.full_name || user?.email || 'User';
 
   // Render canvas when variation changes
   useEffect(() => {
@@ -187,9 +190,40 @@ export default function Home() {
               </button>
             )}
             {user ? (
-              <button onClick={signOut} className="btn btn-secondary">
-                Sign Out
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileMenuOpen((isOpen) => !isOpen)}
+                  className="btn btn-secondary flex items-center gap-2 max-w-xs"
+                  aria-expanded={isProfileMenuOpen}
+                  aria-haspopup="menu"
+                >
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-600 text-white text-sm font-bold">
+                    {username.charAt(0).toUpperCase()}
+                  </span>
+                  <span className="truncate">{username}</span>
+                  <span aria-hidden="true">&#9662;</span>
+                </button>
+                {isProfileMenuOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg p-2"
+                    role="menu"
+                  >
+                    <p className="px-3 py-2 text-sm text-gray-500 truncate" title={user.email}>
+                      {user.email}
+                    </p>
+                    <button
+                      onClick={async () => {
+                        await signOut();
+                        setIsProfileMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"
+                      role="menuitem"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
